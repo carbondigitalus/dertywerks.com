@@ -1,0 +1,44 @@
+# Force HTTPS
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+</IfModule>
+
+
+# Error Pages
+ErrorDocument 400 /
+ErrorDocument 401 /
+ErrorDocument 403 /
+ErrorDocument 404 /
+ErrorDocument 500 /
+
+# Force www to naked url
+Options +FollowSymlinks
+RewriteEngine on
+RewriteCond % ^www.dertywerks.com [NC]
+RewriteRule ^(.*)$ https://dertywerks.com/$1 [R=301,NC]
+
+# Hiding HTAccess File
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+# Hiding Directories
+# Disable directory browsing
+Options -Indexes
+
+# Block Hotlinking
+RewriteEngine on
+RewriteCond % !^$
+RewriteCond % !^https://(www.)?dertywerks.com/.*$ [NC]
+RewriteRule .(gif|jpg|jpeg|png|js|css)$ - [F]
